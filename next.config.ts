@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*",
       },
+      // Add this line to allow the specific domain
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+      },
     ],
   },
   experimental: {
@@ -27,6 +32,8 @@ const nextConfig: NextConfig = {
     buildActivityPosition: "bottom-right",
   },
 };
+
+export default nextConfig;
 
 // export default withSentryConfig(nextConfig, {
 //   // For all available options, see:
