@@ -9,7 +9,7 @@ import markdownit from "markdown-it";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // import StartupCard, { StartupTypeCard } from "@/components/StartupCard";
-import { STARTUP_BY_ID_QUERY } from "@/sanity/queries";
+import { PLAYLIST_BY_SLUG_QUERY, STARTUP_BY_ID_QUERY } from "@/sanity/queries";
 import View from "@/components/ui/View";
 import StartupCard, { StartupTypeCard } from "@/components/ui/StartUpCard";
 
@@ -20,7 +20,12 @@ export const experimental_ppr = true;
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
 
-  const [post] = await Promise.all([client.fetch(STARTUP_BY_ID_QUERY, { id })]);
+  const [post, { select: editorPosts }] = await Promise.all([
+    client.fetch(STARTUP_BY_ID_QUERY, { id }),
+    client.fetch(PLAYLIST_BY_SLUG_QUERY, {
+      slug: "editor-picks-new",
+    }),
+  ]);
 
   if (!post) return notFound();
 
@@ -80,7 +85,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
         <hr className="divider" />
 
-        {/* {editorPosts?.length > 0 && (
+        {editorPosts?.length > 0 && (
           <div className="max-w-4xl mx-auto">
             <p className="text-30-semibold">Editor Picks</p>
 
@@ -90,7 +95,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
               ))}
             </ul>
           </div>
-        )} */}
+        )}
 
         <Suspense fallback={<Skeleton className="view_skeleton" />}>
           <View id={id} />
